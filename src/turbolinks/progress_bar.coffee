@@ -15,13 +15,10 @@ class Turbolinks.ProgressBar
     }
   """
 
-  constructor: ->
-    @stylesheetElement = @createStylesheetElement()
-    @progressElement = @createProgressElement()
-
   show: ->
     unless @visible
       @visible = true
+      @ensureElements()
       @installStylesheetElement()
       @installProgressElement()
       @startTrickling()
@@ -29,6 +26,7 @@ class Turbolinks.ProgressBar
   hide: ->
     if @visible and not @hiding
       @hiding = true
+      @ensureElements()
       @fadeProgressElement =>
         @uninstallProgressElement()
         @stopTrickling()
@@ -36,6 +34,7 @@ class Turbolinks.ProgressBar
         @hiding = false
 
   setValue: (@value) ->
+    @ensureElements()
     @refresh()
 
   # Private
@@ -70,6 +69,14 @@ class Turbolinks.ProgressBar
   refresh: ->
     requestAnimationFrame =>
       @progressElement.style.width = "#{10 + (@value * 90)}%"
+
+  ensureElements: ->
+    unless @stylesheetElement
+      @stylesheetElement = @createStylesheetElement()
+
+    unless @progressElement
+      @progressElement = @createProgressElement()
+
 
   createStylesheetElement: ->
     element = document.createElement("style")

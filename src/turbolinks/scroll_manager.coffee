@@ -5,7 +5,8 @@ class Turbolinks.ScrollManager
   start: ->
     unless @started
       addEventListener("scroll", @onScroll, false)
-      @onScroll()
+      @updatePosition(x: 0, y: 0)
+      Turbolinks.defer @onScroll
       @started = true
 
   stop: ->
